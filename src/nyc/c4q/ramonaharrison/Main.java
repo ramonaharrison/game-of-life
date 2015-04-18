@@ -20,7 +20,7 @@ public class Main {
 
         //drawGosperGliderGun(numRows/2, (numCols/2)-20);
 
-        drawAcorn((numRows/2)-10, (numCols/2)-10);
+        //drawAcorn((numRows/2)-10, (numCols/2)-10);
 
         final AnsiTerminal terminal = new AnsiTerminal();
 
