@@ -2,25 +2,42 @@ package nyc.c4q.ramonaharrison;
 
 import java.util.Random;
 
+/*
+ * 05/17/15
+ * Ramona Harrison
+ * Main.java
+ *
+ * A graphical Conway's Game of Life for the ANSI Terminal.
+ */
+
 public class Main {
 
+    // prepares the grid to match the height x width of terminal window
     final static int numCols = TerminalSize.getNumColumns();
     final static int numRows = TerminalSize.getNumLines();
     static int[][] grid = new int[numRows][numCols];
 
     public static void main(String[] args) {
+
         int generation = 1;
+        int centerX = numCols/2;
+        int centerY = numRows/2;
 
         zeroGrid();
-        //drawRPentomino(numRows/4, numCols/4);
-        //drawRPentomino(numRows/2, numCols/2);
-        //drawRPentomino(3*numRows/4, 3*numCols/4);
 
-        //drawGlider(numRows/2, numCols/2);
+        /*
+         * some classic starting patterns:
+         */
 
-        //drawGosperGliderGun(numRows/2, (numCols/2)-20);
+        drawRPentomino(centerY, centerX);
 
-        //drawAcorn((numRows/2)-10, (numCols/2)-10);
+        //drawGlider(centerY, centerX);
+
+        //drawGosperGliderGun(centerY, centerX-20);
+
+        //drawAcorn(centerY-10, centerX-10);
+
+        //drawDiehard(centerY, centerX);
 
         final AnsiTerminal terminal = new AnsiTerminal();
 
@@ -37,24 +54,27 @@ public class Main {
         terminal.clear();
         terminal.hideCursor();
 
-        while (true)
-        {
+        while (true) {
             terminal.clear();
+
             drawGeneration(terminal);
             repopulateGrid();
 
+            // displays and advances generation counter
             terminal.setTextColor(AnsiTerminal.Color.RED);
             terminal.moveTo(numRows-1, numCols-20);
             terminal.write("Generation:  " + generation);
             terminal.setTextColor(AnsiTerminal.Color.WHITE);
             generation++;
             AnsiTerminal.pause(0.1);
+
         }
 
     }
 
     public static void drawGeneration(AnsiTerminal terminal) {
 
+        // parses cell status from 2D array. if live, displays cell in terminal
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
                 if (grid[i][j] == 1) {
@@ -63,23 +83,28 @@ public class Main {
                 }
             }
         }
+
     }
 
     public static void repopulateGrid() {
 
+        // builds 2D array for next generation
         int[][] nextGrid = new int[numRows][numCols];
+
         for (int i = 0; i < numRows; i++) {
+
             for (int j = 0; j < numCols; j++) {
+
                 boolean liveCell = grid[i][j] == 1;
                 int liveNeighbors = liveNeighbors(grid, i, j, numRows, numCols);
 
-                if (liveCell && (liveNeighbors < 2 || liveNeighbors > 3)) {
+                if (liveCell && (liveNeighbors < 2 || liveNeighbors > 3)) {             // if cell is live and overcrowded or lonely, dies
                     nextGrid[i][j] = 0;
-                } else if (liveCell && (liveNeighbors == 2 || liveNeighbors == 3)) {
+                } else if (liveCell && (liveNeighbors == 2 || liveNeighbors == 3)) {    // if cell is live and has exactly 2 or 3 neighbors, lives
                     nextGrid[i][j] = 1;
-                } else if (!liveCell && liveNeighbors == 3) {
+                } else if (!liveCell && liveNeighbors == 3) {                           // if cell is dead and has exactly 3 neighbors, lives
                     nextGrid[i][j] = 1;
-                } else {
+                } else {                                                                // if cell is dead and has any other # of neighbors, dies
                     nextGrid[i][j] = 0;
                 }
             }
@@ -90,12 +115,16 @@ public class Main {
 
 
     public static int liveNeighbors(int[][] grid, int i, int j, int numRows, int numCols) {
+
+        // reports number of live neighbors for any cell
         int neighborCount = 0;
 
-        if (0 < i && i < numRows - 1 && 0 < j && j < numCols - 1) {
+        if (0 < i && i < numRows - 1 && 0 < j && j < numCols - 1) {                     // if cell is not a border cell
+
             for (int k = i - 1; k <= i + 1; k++) {
                 for (int l = j - 1; l <= j + 1; l++) {
-                    if (!(i == k && l == j) && grid[k][l] == 1) {
+
+                    if (!(i == k && l == j) && grid[k][l] == 1) {                       // check each of the eight neighboring cells. if live, count
                         neighborCount += 1;
                     }
                 }
@@ -106,14 +135,19 @@ public class Main {
     }
 
     public static void zeroGrid() {
+
         // populates grid with zeros (dead cells)
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
                 grid[i][j] = 0;
             }
         }
+
     }
 
+    /*
+     * starting patterns:
+     */
 
     public static void drawRPentomino(int y, int x) {
 
@@ -136,6 +170,7 @@ public class Main {
         grid[y][x + 8] = 1;
         grid[y][x + 9] = 1;
         grid[y][x + 10] = 1;
+
     }
 
     public static void drawGlider(int y, int x) {
@@ -201,23 +236,32 @@ public class Main {
         grid[y][x+6] = 1;
         grid[y+1][x+3] = 1;
         grid[y+2][x+1] = 1;
+
     }
 
     public static void drawDiehard(int y, int x) {
+        grid[y][x] = 1;
+        grid[y][x+1] = 1;
+        grid[y-1][x+1] = 1;
+
+        grid[y+1][x+6] = 1;
+        grid[y-1][x+5] = 1;
+        grid[y-1][x+7] = 1;
+        grid[y-1][x+7] = 1;
 
     }
-
 
     public static void randomStart() {
 
         Random random = new Random();
 
-        // populates grid randomly (~50/50)
+        // populates grid randomly ~(50 live / 50 dead)
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
                 grid[i][j] = random.nextInt(2);
             }
         }
+
     }
 
 }
