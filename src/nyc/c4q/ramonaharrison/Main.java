@@ -2,8 +2,8 @@ package nyc.c4q.ramonaharrison;
 
 import java.util.Random;
 
-/*
- * 05/17/15
+/* 05/17/15
+ *
  * Ramona Harrison
  * Main.java
  *
@@ -25,8 +25,8 @@ public class Main {
 
         zeroGrid();
 
-        /*
-         * some classic starting patterns:
+
+        /* some classic start patterns:
          */
 
         drawRPentomino(centerY, centerX);
