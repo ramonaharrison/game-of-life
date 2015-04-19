@@ -9,8 +9,8 @@ $ ./run
 Includes classic start patterns:
 
 * R-pentamino
-* Gosper GLider Gun
+* Gosper Glider Gun
 * Acorn
 * Diehard
 
-Patterns are toggled by commenting in lines 30-40 of Main.java.
+Patterns are toggled with commenting in lines 30-40 of Main.java.
