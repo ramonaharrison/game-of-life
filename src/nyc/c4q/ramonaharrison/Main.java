@@ -31,13 +31,13 @@ public class Main {
 
         drawRPentomino(centerY, centerX);
 
-        //drawGlider(centerY, centerX);
-
         //drawGosperGliderGun(centerY, centerX-20);
 
         //drawAcorn(centerY-10, centerX-10);
 
         //drawDiehard(centerY, centerX);
+
+        //drawGlider(centerY, centerX);
 
         final AnsiTerminal terminal = new AnsiTerminal();
 
